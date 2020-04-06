@@ -21,10 +21,8 @@ function checkKey(req, res, next) {
         user = JSON.parse(fs.readFileSync(path, 'utf8'));
         next();
     } else {
-        res.send({"authentication": "invalid"});
-        
+        res.send({"authentication": "invalid"});   
     }
-
 };
 
 app.use(bodyParser.json());
@@ -43,62 +41,42 @@ app.get("/profile", function(req, res) {
 });
 
 app.get("/contacts", function(req, res) {
-
     res.send({"contacts": user.contacts});
-
 });
 
 app.post("/contacts/add", function(req, res) {
-
     if(req.body.name != undefined && req.body.number != undefined) {
-
         user.contacts.push({
             name: req.body.name,
             number: req.body.number
         });
-
         fs.writeFileSync(path, JSON.stringify(user, null, "\t"));
-
         res.send({added: {
             name: req.body.name,
             number: req.body.number
         }});
-
     } else {
         res.send({error: "Could not add entry"});
     }
-
 });
 
 app.post("/contacts/remove", function(req, res) {
-
     var position = req.body.position;
-
     if(position != undefined) {
-
         if(position < user.contacts.length && position >= 0) {
-
             var entry = user.contacts[position];
-
             user.contacts.splice(position, 1);
-
             fs.writeFileSync(path, JSON.stringify(user, null, "\t"));
-
             res.send({removed: {
                 name: entry.name,
                 number: entry.number
             }});
-
         } else {
-
             res.send({"error": "Invalid position"});
-
         }
-
     } else {
         res.send({"error": "Could not remove entry"});
     }
-
 });
 
 app.listen(8080, function() {
