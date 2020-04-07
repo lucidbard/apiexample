@@ -18,6 +18,7 @@ function checkKey(req, res, next) {
     path = "data/" + key + ".json";
 
     if(fs.existsSync(path)) {
+      console.log("Reading " + path)
         user = JSON.parse(fs.readFileSync(path, 'utf8'));
         next();
     } else {
